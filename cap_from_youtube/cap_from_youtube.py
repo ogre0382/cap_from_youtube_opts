@@ -22,11 +22,10 @@ class VideoStream:
         return f'{self.resolution} ({self.height}x{self.width}): {self.url}'
 
 
-def list_video_streams(url):
+def list_video_streams(url, ydl_opts={}):
     cap = None
 
     # ℹ️ See help(yt_dlp.YoutubeDL) for a list of available options and public functions
-    ydl_opts = {}
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
 
@@ -40,10 +39,10 @@ def list_video_streams(url):
         return streams[::-1], resolutions[::-1]
 
 
-def cap_from_youtube(url, resolution=None):
+def cap_from_youtube(url, resolution=None, ydl_opts={}):
     cap = None
 
-    streams, resolutions = list_video_streams(url)
+    streams, resolutions = list_video_streams(url, ydl_opts)
 
     if not resolution or resolution == 'best':
         return cv2.VideoCapture(streams[-1].url)
